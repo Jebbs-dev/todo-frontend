@@ -18,7 +18,7 @@ export const useCreateTask = () => {
     },
     onSettled: (data, error) => {
       if (error) {
-        console.error("Error creating user:", error.message);
+        console.error("Error creating task:", error.message);
       }
       // if (data) {
       //   router.push("/tasks");

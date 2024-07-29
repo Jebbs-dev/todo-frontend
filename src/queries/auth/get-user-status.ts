@@ -1,9 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 
 export const useGetUserAuthStatus = () => {
-  const router = useRouter();
 
   return useQuery({
     queryKey: ["auth"],
@@ -17,7 +15,7 @@ export const useGetUserAuthStatus = () => {
         if (!response) {
           throw new Error("Failed to fetch auth status");
         }
-
+        console.log(response.data)
         return response.data;
       } catch (error) {
         console.log("Error checking auth status:", error);

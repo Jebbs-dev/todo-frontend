@@ -20,7 +20,7 @@ export const useCreateUser = () => {
         console.error("Error creating user:", error.message);
       }
       if (data) {
-        router.push("/");
+        router.push("/tasks");
       }
     },
   });

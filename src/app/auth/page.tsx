@@ -9,7 +9,6 @@ import { FcGoogle } from "react-icons/fc";
 import { FaDiscord, FaGithub } from "react-icons/fa";
 import { AuthForm } from "@/modules/authentication/components/auth-form";
 
-
 import { useGetUserAuthStatus } from "@/queries/auth/get-user-status";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -25,9 +24,8 @@ const AuthPage = () => {
   }
 
   if (authenticatedUser) {
-    router.replace("/");
+    router.replace("/tasks");
   }
- 
 
   const toggleVariant = () => {
     setVariant((currentVariant) =>

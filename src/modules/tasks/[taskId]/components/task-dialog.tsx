@@ -1,15 +1,16 @@
 import {
-  Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { TaskForm } from "./task-form";
+import { useGetTask } from "@/queries/task/get-task";
 
 export const TaskModal = () => {
+
   return (
-    <Dialog>
+    
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-2xl">Create Task</DialogTitle>
@@ -17,6 +18,5 @@ export const TaskModal = () => {
         </DialogHeader>
         <TaskForm />
       </DialogContent>
-    </Dialog>
   );
 };

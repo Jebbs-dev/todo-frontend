@@ -1,4 +1,4 @@
-import { UserProps } from "@/modules/authentication/components/auth-form";
+import { UserProps } from "@/modules/authentication/components/forms/auth-form";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -21,7 +21,7 @@ export const useAuthenticateUser = () => {
         console.error("Error authenticating user:", error.message);
       }
       if (data) {
-        router.push("/");
+        router.push("/tasks");
       }
     },
   });

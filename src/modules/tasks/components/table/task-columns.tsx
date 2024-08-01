@@ -1,17 +1,18 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { CellAction } from "./cell-actions";
+import { CellAction } from "./task-datatable-cell-actions";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Task } from "../../../../../types";
 
-export type TaskColumn = {
-  id: string;
-  title: string;
-  status: "Backlog" | "Todo" | "In Progress" | "Done" | "Cancelled";
-  priority: "Low" | "Medium" | "High";
-};
+// export type TaskColumn = {
+//   id: string;
+//   title: string;
+//   status: "Backlog" | "Todo" | "In Progress" | "Done" | "Cancelled";
+//   priority: "Low" | "Medium" | "High";
+// };
 
-export const columns: ColumnDef<TaskColumn>[] = [
+export const columns: ColumnDef<Task>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -35,12 +36,21 @@ export const columns: ColumnDef<TaskColumn>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "id",
+    accessorKey: "task",
     header: "Task",
     cell: ({ row }) => {
       const formattedId = `TASK-${row.index + 1}`;
 
       return <div>{formattedId}</div>;
+    },
+  },
+  {
+    accessorKey: "id",
+    header: "Id",
+    cell: ({ row }) => {
+      const id = row.id;
+
+      return <div>{id}</div>;
     },
   },
   {

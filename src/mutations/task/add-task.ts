@@ -1,5 +1,5 @@
-import { UserProps } from "@/modules/authentication/components/auth-form";
-import { TaskProps } from "@/modules/tasks/[taskId]/components/task-form";
+import { UserProps } from "@/modules/authentication/components/forms/auth-form";
+import { TaskProps } from "@/modules/tasks/components/task-form";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -11,7 +11,8 @@ export const useCreateTask = () => {
     mutationFn: async (values: TaskProps) => {
       const response = await axios.post(
         "http://localhost:8080/api/tasks",
-        values
+        values,
+        { withCredentials: true }
       );
       console.log(response.data);
       return response.data;
@@ -20,9 +21,9 @@ export const useCreateTask = () => {
       if (error) {
         console.error("Error creating task:", error.message);
       }
-      // if (data) {
-      //   router.push("/tasks");
-      // }
+      if (data) {
+        router.refresh();
+      }
     },
   });
 };

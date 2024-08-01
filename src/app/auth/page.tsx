@@ -7,7 +7,8 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { FcGoogle } from "react-icons/fc";
 import { FaDiscord, FaGithub } from "react-icons/fa";
-import { AuthForm } from "@/modules/authentication/components/auth-form";
+import { AuthForm } from "@/modules/authentication/components/forms/auth-form";
+
 
 import { useGetUserAuthStatus } from "@/queries/auth/get-user-status";
 import { useRouter } from "next/navigation";
@@ -26,6 +27,7 @@ const AuthPage = () => {
   if (authenticatedUser) {
     router.replace("/tasks");
   }
+ 
 
   const toggleVariant = () => {
     setVariant((currentVariant) =>

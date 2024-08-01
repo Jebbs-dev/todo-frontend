@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { GeistSans } from 'geist/font/sans';
 import "./globals.css";
 import { QueryProvider } from "@/providers/query-client-provider";
 import { ToasterProvider } from "@/providers/toast-provider";
 
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Fullstack Todo App",
@@ -19,7 +18,7 @@ export default function RootLayout({
   return (
     <QueryProvider>
       <html lang="en">
-        <body className={inter.className}>
+        <body className={GeistSans.className}>
             <ToasterProvider />
             {children}
         </body>

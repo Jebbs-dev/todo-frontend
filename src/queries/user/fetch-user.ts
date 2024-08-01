@@ -14,7 +14,7 @@ export const useGetUser = () => {
         `http://localhost:8080/api/users/${authenticatedUser._id}`
         // { withCredentials: true }
       );
-      console.log(response.data)
+
       return response.data;
     },
   });

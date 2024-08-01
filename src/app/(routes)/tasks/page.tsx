@@ -1,19 +1,34 @@
 "use client";
 
 // import Layout from "./layout";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useGetUserAuthStatus } from "@/queries/auth/get-user-status";
 
 import { useGetUser } from "@/queries/user/fetch-user";
 import { useGetTask } from "@/queries/task/get-task";
-import { TaskClient } from "@/modules/tasks/components/client";
-import { Divide } from "lucide-react";
+import { LogOut, Settings, User } from "lucide-react";
+import Image from "next/image";
+
+import { DataTable } from "@/modules/tasks/components/table/task-data-table";
+import { Separator } from "@/components/ui/separator";
+
+import { columns as taskColumns } from "@/modules/tasks/components/table/task-columns";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useLogoutUser } from "@/mutations/auth/logout-user";
 
 const Home = () => {
-
   const { data: authenticatedUser, isPending } = useGetUserAuthStatus();
   const { data: currentUser } = useGetUser();
   const { data: tasks } = useGetTask();
+  const { mutateAsync: logoutUser } = useLogoutUser();
 
   if (isPending) {
     return (
@@ -36,21 +51,68 @@ const Home = () => {
           </div>
         </div>
       </>
-    ); // You can customize this loading state as needed
+    );
   }
 
   if (!authenticatedUser) {
     redirect("/auth");
   }
 
-  // if (tasks) console.log(tasks); // log the tasks data for debugging purposes
-
   return (
     <>
       {authenticatedUser && (
-        <div className="h-screen p-20">
-          <h1 className="text-4xl text-black">Welcome</h1>
-          <TaskClient currentUser={currentUser} tasks={tasks}  /> 
+        <div className="h-screen p-10">
+          <div className="mx-3 px-3 md:mx-0 md:px-10 py-4 border rounded-md bg-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight text-black">
+                  Welcome back {currentUser?.name}!{/* Welcome back! */}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Here's a list of your tasks for this month!
+                </p>
+              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex rounded-full h-10 w-10 items-center justify-around">
+                  <Image
+                    src="/images/avatar.png"
+                    alt="User avatar"
+                    className="h-10 w-10 rounded-full"
+                    width={20}
+                    height={20}
+                  />
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent className="w-40">
+                  <DropdownMenuLabel>
+                    <h3>{currentUser?.name}</h3>
+                    <p className="font-normal text-xs">{currentUser?.email}</p>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-black/10" />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>User Settings</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator className="bg-black/10" />
+                  <DropdownMenuItem onClick={()=>logoutUser()}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
+            <Separator className="mt-2" />
+            {tasks && (
+              <DataTable columns={taskColumns} data={tasks} searchkey="title" />
+            )}
+          </div>
         </div>
       )}
     </>

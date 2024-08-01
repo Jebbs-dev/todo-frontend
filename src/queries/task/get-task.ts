@@ -5,8 +5,8 @@ import { Task } from "../../../types";
 export const useGetTask = () => {
   return useQuery({
     queryKey: ["tasks"],
-    queryFn: async ()=> {
-      const response = await axios.get(
+    queryFn: async (): Promise<Task[]> => {
+      const response = await axios.get<Task[]>(
         "http://localhost:8080/api/tasks",
         { withCredentials: true }
       );
@@ -14,7 +14,7 @@ export const useGetTask = () => {
       if (!response) {
         throw new Error("Failed to fetch tasks");
       }
-      console.log(response.data);
+
       return response.data;
     },
   });

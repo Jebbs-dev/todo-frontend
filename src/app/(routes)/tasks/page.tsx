@@ -23,6 +23,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useLogoutUser } from "@/mutations/auth/logout-user";
+import { HomePageSkeleton } from "@/modules/tasks/components/task-homepage-skeleton";
+import toast from "react-hot-toast";
 
 const Home = () => {
   const { data: authenticatedUser, isPending } = useGetUserAuthStatus();
@@ -31,32 +33,20 @@ const Home = () => {
   const { mutateAsync: logoutUser } = useLogoutUser();
 
   if (isPending) {
-    return (
-      <>
-        <div className="flex justify-center items-center h-screen">
-          <div className="border border-slate-200 shadow rounded-md p-4 max-w-sm w-full mx-auto my-auto">
-            <div className="animate-pulse flex space-x-4">
-              <div className="rounded-full bg-slate-400 h-10 w-10"></div>
-              <div className="flex-1 space-y-6 py-1">
-                <div className="h-2 bg-slate-400 rounded"></div>
-                <div className="space-y-3">
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="h-2 bg-slate-400 rounded col-span-2"></div>
-                    <div className="h-2 bg-slate-400 rounded col-span-1"></div>
-                  </div>
-                  <div className="h-2 bg-slate-400 rounded"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
+    return <HomePageSkeleton />;
   }
 
   if (!authenticatedUser) {
     redirect("/auth");
   }
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      toast.success("Logged out successfully!");
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
+  };
 
   return (
     <>
@@ -100,7 +90,7 @@ const Home = () => {
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator className="bg-black/10" />
-                  <DropdownMenuItem onClick={()=>logoutUser()}>
+                  <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Logout</span>
                   </DropdownMenuItem>

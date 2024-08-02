@@ -3,12 +3,16 @@
 import {
   ColumnDef,
   ColumnFiltersState,
+  SortingState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+
+import { PiSlidersHorizontal } from "react-icons/pi";
 
 import {
   Table,
@@ -39,6 +43,13 @@ import {
 
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { TaskModal } from "@/modules/tasks/components/task-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -53,6 +64,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
+  const [sorting, setSorting] = useState<SortingState>([])
 
   const table = useReactTable({
     data,
@@ -62,9 +74,12 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
     state: {
       columnFilters,
       rowSelection,
+      sorting,
     },
   });
 
@@ -79,13 +94,46 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        <Dialog>
-          <DialogTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
-            <Plus className="mr-2 h-4 w-4" />
-            New Task
-          </DialogTrigger>
-          <TaskModal />
-        </Dialog>
+        <div className="flex flex-row space-x-3">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto px-2">
+                <div className="flex flex-row items-center">
+                  <PiSlidersHorizontal className="mr-2 h-5 w-5" />
+                  View
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Dialog>
+            <DialogTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+              <Plus className="mr-2 h-4 w-4" />
+              New Task
+            </DialogTrigger>
+            <TaskModal />
+          </Dialog>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

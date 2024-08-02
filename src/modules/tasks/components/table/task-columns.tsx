@@ -4,6 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./task-datatable-cell-actions";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Task } from "../../../../../types";
+import { Button } from "@/components/ui/button";
+import { ChevronsUpDown } from "lucide-react";
 
 // export type TaskColumn = {
 //   id: string;
@@ -45,25 +47,47 @@ export const columns: ColumnDef<Task>[] = [
     },
   },
   {
-    accessorKey: "id",
-    header: "Id",
-    cell: ({ row }) => {
-      const id = row.id;
-
-      return <div>{id}</div>;
+    accessorKey: "title",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Title
+          <ChevronsUpDown className="ml-2 h-3 w-3" />
+        </Button>
+      );
     },
   },
   {
-    accessorKey: "title",
-    header: "Title",
-  },
-  {
     accessorKey: "status",
-    header: "Status",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ChevronsUpDown className="ml-2 h-3 w-3" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "priority",
-    header: "Priority",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className=""
+        >
+          Priority
+          <ChevronsUpDown className="ml-2 h-3 w-3" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "action",

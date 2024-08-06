@@ -5,14 +5,18 @@ import { CellAction } from "./task-datatable-cell-actions";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Task } from "../../../../../types";
 import { Button } from "@/components/ui/button";
-import { ChevronsUpDown } from "lucide-react";
-
-// export type TaskColumn = {
-//   id: string;
-//   title: string;
-//   status: "Backlog" | "Todo" | "In Progress" | "Done" | "Cancelled";
-//   priority: "Low" | "Medium" | "High";
-// };
+import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff } from "lucide-react";
+import { PriorityIcons } from "./priority-icons";
+import { StatusIcons } from "./status-icons";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useState } from "react";
+import { TitleLabels } from "./title-labels";
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -50,48 +54,110 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: "title",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Title
-          <ChevronsUpDown className="ml-2 h-3 w-3" />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="-ml-4">
+              Title
+              <ChevronsUpDown className="ml-2 h-3 w-3" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem
+              onClick={() => column.toggleSorting(false, false)}
+            >
+              <ArrowUp className="mr-2 h-4 w-4" />
+              Asc
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => column.toggleSorting(true, false)}>
+              <ArrowDown className="mr-2 h-4 w-4" />
+              Desc
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-black/10" />
+            <DropdownMenuItem
+              onClick={(value) => column.toggleVisibility(!value)}
+            >
+              <EyeOff className="mr-2 h-4 w-4" />
+              Hide
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
+    // cell: ({ row }) => <TitleLabels data={row.original}  />,
   },
   {
     accessorKey: "status",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Status
-          <ChevronsUpDown className="ml-2 h-3 w-3" />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="-ml-4">
+              Status
+              <ChevronsUpDown className="ml-2 h-3 w-3" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem
+              onClick={() => column.toggleSorting(false, false)}
+            >
+              <ArrowUp className="mr-2 h-4 w-4" />
+              Asc
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => column.toggleSorting(true, false)}>
+              <ArrowDown className="mr-2 h-4 w-4" />
+              Desc
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-black/10" />
+            <DropdownMenuItem
+              onClick={(value) => column.toggleVisibility(!value)}
+            >
+              <EyeOff className="mr-2 h-4 w-4" />
+              Hide
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
+    cell: ({ row }) => <StatusIcons data={row.original}/>,
   },
   {
     accessorKey: "priority",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className=""
-        >
-          Priority
-          <ChevronsUpDown className="ml-2 h-3 w-3" />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="-ml-4">
+              Priority
+              <ChevronsUpDown className="ml-2 h-3 w-3" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem
+              onClick={() => column.toggleSorting(false, false)}
+            >
+              <ArrowUp className="mr-2 h-4 w-4" />
+              Asc
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => column.toggleSorting(true, false)}>
+              <ArrowDown className="mr-2 h-4 w-4" />
+              Desc
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-black/10" />
+            <DropdownMenuItem
+              onClick={(value) => column.toggleVisibility(!value)}
+            >
+              <EyeOff className="mr-2 h-4 w-4" />
+              Hide
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
+    cell: ({ row }) => <PriorityIcons data={row.original} />,
   },
   {
     accessorKey: "action",
     header: "",
-    cell: ({ row }) => <CellAction data={row.original} />,
+    cell: ({ row }) => <CellAction data={row.original}  />,
   },
 ];

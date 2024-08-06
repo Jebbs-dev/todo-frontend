@@ -20,6 +20,7 @@ import { FaDotCircle } from "react-icons/fa";
 import { useCreateUser } from "@/mutations/user/add-user";
 import { useAuthenticateUser } from "@/mutations/auth/authenticate-user";
 import toast from "react-hot-toast";
+import { FunctionComponent } from "react";
 
 interface AuthFormProps {
   variant: string;
@@ -58,7 +59,7 @@ const loginDefaultValues = {
 
 export type UserProps = z.infer<typeof formSchema>;
 
-export const AuthForm: React.FC<AuthFormProps> = ({ variant }) => {
+export const AuthForm: FunctionComponent<AuthFormProps> = ({ variant }) => {
   const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: authenticateUser } = useAuthenticateUser();
 

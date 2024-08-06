@@ -23,6 +23,7 @@ import { useCreateTask } from "@/mutations/task/add-task";
 import { Task } from "../../../../types";
 import { useUpdateTask } from "@/mutations/task/update-task";
 import toast from "react-hot-toast";
+import { FunctionComponent } from "react";
 
 interface TaskFormProps {
   initialData?: Task;
@@ -43,7 +44,7 @@ const formSchema = z.object({
 
 export type TaskProps = z.infer<typeof formSchema>;
 
-export const TaskForm: React.FC<TaskFormProps> = ({ initialData }) => {
+export const TaskForm: FunctionComponent<TaskFormProps> = ({ initialData }) => {
   const { mutateAsync: createTask, isSuccess } = useCreateTask();
   const { mutateAsync: updateTask } = useUpdateTask();
 

@@ -2,9 +2,8 @@
 
 // import Layout from "./layout";
 import { redirect } from "next/navigation";
-import { useGetUserAuthStatus } from "@/queries/auth/get-user-status";
 
-import { useGetUser } from "@/queries/user/fetch-user";
+import { useGetUser } from "@/queries/user/get-user";
 import { useGetTask } from "@/queries/task/get-task";
 import { LogOut, Settings, User } from "lucide-react";
 import Image from "next/image";
@@ -28,12 +27,11 @@ import { HomePageSkeleton } from "@/modules/tasks/components/task-homepage-skele
 import toast from "react-hot-toast";
 
 const Home = () => {
-  const { data: authenticatedUser, isPending } = useGetUserAuthStatus();
-  const { data: currentUser } = useGetUser();
-  const { data: tasks } = useGetTask();
+  const { data: authenticatedUser, isPending: isAuthPending } = useGetUser();
+  const { data: tasks, isFetching: isTasksFetching } = useGetTask();
   const { mutateAsync: logoutUser } = useLogoutUser();
 
-  if (isPending) {
+  if (isAuthPending) {
     return <HomePageSkeleton />;
   }
 
@@ -57,7 +55,7 @@ const Home = () => {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold tracking-tight text-black">
-                  Welcome back {currentUser?.name}!{/* Welcome back! */}
+                  Welcome back {authenticatedUser?.name}!{/* Welcome back! */}
                 </h2>
                 <p className="text-sm text-muted-foreground">
                   Here's a list of your tasks for this month!
@@ -76,8 +74,10 @@ const Home = () => {
 
                 <DropdownMenuContent className="w-40">
                   <DropdownMenuLabel>
-                    <h3>{currentUser?.name}</h3>
-                    <p className="font-normal text-xs">{currentUser?.email}</p>
+                    <h3>{authenticatedUser?.name}</h3>
+                    <p className="font-normal text-xs">
+                      {authenticatedUser?.email}
+                    </p>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator className="bg-black/10" />
                   <DropdownMenuGroup>
@@ -100,9 +100,7 @@ const Home = () => {
             </div>
 
             <Separator className="mt-2" />
-            {tasks && (
-              <DataTable columns={taskColumns} data={tasks} searchkey="title" />
-            )}
+            <DataTable columns={taskColumns} data={tasks} searchkey="title" />
           </div>
         </div>
       )}

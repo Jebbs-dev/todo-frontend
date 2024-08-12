@@ -24,6 +24,8 @@ import {
 } from "lucide-react";
 // import { TaskColumn } from "./columns";
 
+import { labels } from "./data/labels";
+
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 // import Link from "next/link";
@@ -31,23 +33,42 @@ import { useRouter } from "next/navigation";
 // import { TaskModal } from "../components/task-dialog";
 import { Task } from "../../../../../types";
 import { Drawer, DrawerTrigger } from "@/components/ui/drawer";
-import TaskFormDrawer from "../task-drawer";
+import TaskFormDrawer from "../task-sheet";
+
+import { FunctionComponent, useState } from "react";
+import Link from "next/link";
+import useEditModal from "@/hooks/edit-modal-store";
 
 interface CellActionProps {
   data: Task;
+  // label: string;
 }
 
-export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+export const CellAction: FunctionComponent<CellActionProps> = ({ data }) => {
   const onCopy = (title: string) => {
     navigator.clipboard.writeText(title);
     toast.success("Task copied to the clipboard");
   };
 
-  console.log(data);
+  const editSheet = useEditModal();
+
+  const [isTaskOpen, setIsTaskOpen] = useState(false);
+
+  const onEditTask = (e: any) => {
+    e.preventDefault();
+    setIsTaskOpen(true);
+    // editSheet.onOpen(true);
+
+  };
 
   const router = useRouter();
   return (
     <>
+      <TaskFormDrawer
+        isOpen={isTaskOpen}
+        setIsOpen={setIsTaskOpen}
+        task={data}
+      />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -56,25 +77,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          {/* <Link href={``} as={`tasks/${data.id}`}> */}
-          {/* <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-            <Dialog>
-              <DialogTrigger>
-              <Plus className="mr-2 h-4 w-4" /> 
-                Edit
-                <TaskModal />
-              </DialogTrigger>
-            </Dialog>
-          </DropdownMenuItem> */}
-          <DropdownMenuItem
-            // onClick={() => {
-            //   router.push(`/tasks/${data.id}`);
-            // }}
-            onSelect={(e) => e.preventDefault()}
-          >
+          <DropdownMenuItem onClick={onEditTask}>
             <Drawer direction="right">
               <DrawerTrigger>Edit</DrawerTrigger>
-              <TaskFormDrawer taskId={""} />
             </Drawer>
           </DropdownMenuItem>
           {/* </Link> */}
@@ -97,18 +102,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
-                <DropdownMenuItem>
-                  <Mail className="mr-2 h-4 w-4" />
-                  <span>Bug</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <MessageSquare className="mr-2 h-4 w-4" />
-                  <span>Feature</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  <span>Documentation</span>
-                </DropdownMenuItem>
+                {labels.map((label) => (
+                  <DropdownMenuItem key={label} onSelect={() => {}}>
+                    <Mail className="mr-2 h-4 w-4" />
+                    <span>{label}</span>
+                  </DropdownMenuItem>
+                ))}
               </DropdownMenuSubContent>
             </DropdownMenuPortal>
           </DropdownMenuSub>

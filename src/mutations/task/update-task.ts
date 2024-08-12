@@ -5,22 +5,28 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Task } from "../../../types";
 
-export const useUpdateTask = () => {
+export const useUpdateTask = (taskId: string) => {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: async ({
-      values,
-      taskId,
-    }: {
-      values: TaskProps;
-      taskId: string;
-    }): Promise<Task> => {
+    mutationFn: async (values: TaskProps): Promise<Task> => {
+      const storedToken = localStorage.getItem("jwtToken");
+
+      if (!storedToken) {
+        throw new Error("No token found, user is not authenticated");
+      }
+
+      const parsedToken = JSON.parse(storedToken);
+
       const response = await axios.patch<Task>(
         `http://localhost:8080/api/tasks/${taskId}`,
-        values
+        values,
+        {
+          headers: {
+            Authorization: `Bearer ${parsedToken}`,
+          },
+        }
       );
-      console.log(response.data);
       return response.data;
     },
     onSettled: (data, error) => {

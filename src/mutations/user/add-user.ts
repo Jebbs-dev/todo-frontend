@@ -9,7 +9,7 @@ export const useCreateUser = () => {
   return useMutation({
     mutationFn: async (values: UserProps) => {
       const response = await axios.post(
-        "http://localhost:8080/api/users",
+        "http://localhost:8080/api/users/register",
         values
       );
       console.log(response.data);

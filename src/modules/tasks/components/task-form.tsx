@@ -25,8 +25,11 @@ import { useUpdateTask } from "@/mutations/task/update-task";
 import toast from "react-hot-toast";
 import { FunctionComponent } from "react";
 
+import { useRouter } from "next/navigation";
+
 interface TaskFormProps {
   initialData?: Task;
+  closeDialog(): void;
 }
 
 const formSchema = z.object({
@@ -36,7 +39,6 @@ const formSchema = z.object({
   status: z.enum(["Backlog", "Todo", "In Progress", "Done", "Cancelled"], {
     required_error: "Please select a status for your task.",
   }),
-  // dueDate: z.date().optional(),
   priority: z.enum(["Low", "Medium", "High"], {
     required_error: "Please select a priority level for your task",
   }),
@@ -44,13 +46,16 @@ const formSchema = z.object({
 
 export type TaskProps = z.infer<typeof formSchema>;
 
-export const TaskForm: FunctionComponent<TaskFormProps> = ({ initialData }) => {
-  const { mutateAsync: createTask, isSuccess } = useCreateTask();
-  const { mutateAsync: updateTask } = useUpdateTask();
+export const TaskForm: FunctionComponent<TaskFormProps> = ({ initialData, closeDialog }) => {
+
+  const router = useRouter();
+
+  const taskId = initialData?._id;
+
+  const { mutateAsync: createTask } = useCreateTask();
+  const { mutateAsync: updateTask } = useUpdateTask(taskId as string);
 
   const toastMessage = initialData ? "Task updated" : "Task created";
-
-  const taskId = initialData?.id;
 
   const form = useForm<TaskProps>({
     resolver: zodResolver(formSchema),
@@ -61,20 +66,18 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({ initialData }) => {
     },
   });
 
-  const handleCreateTask = async (values: TaskProps) => {
-    try {
-      await createTask(values);
-      toast.success(toastMessage);
-    } catch (error) {
-      toast.error("Something went wrong!");
-    }
-  };
-
-  const handleUpdateTask = async (values: TaskProps, taskId: string) => {
+  const handleSubmitTask = async (values: TaskProps) => {
     try {
       if (initialData) {
-        await updateTask({ taskId, values });
+        await updateTask(values);
+        closeDialog();
+
+      } else {
+        await createTask(values);
+        closeDialog();
       }
+      toast.success(toastMessage);
+      router.refresh();
     } catch (error) {
       toast.error("Something went wrong!");
     }
@@ -84,14 +87,7 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({ initialData }) => {
     <div>
       <Form {...form}>
         <form
-          onSubmit={
-            initialData
-              ? form.handleSubmit((values) =>
-                  handleUpdateTask(values, taskId as string)
-                )
-              : 
-              form.handleSubmit(handleCreateTask)
-          }
+          onSubmit={form.handleSubmit(handleSubmitTask)}
           className="space-y-4"
         >
           <FormField

@@ -10,15 +10,15 @@ import { FaDiscord, FaGithub } from "react-icons/fa";
 import { AuthForm } from "@/modules/authentication/components/forms/auth-form";
 
 
-import { useGetUserAuthStatus } from "@/queries/auth/get-user-status";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { useGetUser } from "@/queries/user/get-user";
 
 const AuthPage = () => {
   const [variant, setVariant] = useState("login");
 
   const router = useRouter();
-  const { data: authenticatedUser, isLoading } = useGetUserAuthStatus();
+  const { data: authenticatedUser, isLoading } = useGetUser();
 
   if (isLoading) {
     return <p>Loading...</p>; // You can customize this loading state as needed

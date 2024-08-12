@@ -1,19 +1,28 @@
 import { UserProps } from "@/modules/authentication/components/forms/auth-form";
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
+interface TaskFilters {
+  tasks: unknown;
+}
+
 export const useAuthenticateUser = () => {
   const router = useRouter();
+  const queryClient = new QueryClient();
 
   return useMutation({
     mutationFn: async (values: UserProps) => {
       const response = await axios.post(
-        "http://localhost:8080/api/auth",
-        values,
-        { withCredentials: true }
+        "http://localhost:8080/api/auth/login",
+        values
+        // { withCredentials: true }
       );
-      console.log(response.data);
+   
+      const storedToken = response.data.accessToken;
+      console.log(storedToken);
+      localStorage.setItem("jwtToken", JSON.stringify(storedToken));
+
       return response.data;
     },
     onSettled: (data, error) => {

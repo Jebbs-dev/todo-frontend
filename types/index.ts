@@ -1,5 +1,5 @@
 export type Task = {
-  id: string;
+  _id: string;
   title: string;
   status: "Backlog" | "Todo" | "In Progress" | "Done" | "Cancelled";
   priority: "Low" | "Medium" | "High";

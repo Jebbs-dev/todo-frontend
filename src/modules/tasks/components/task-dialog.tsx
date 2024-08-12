@@ -1,33 +1,47 @@
 "use client";
 
 import {
+  Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { TaskForm } from "./task-form";
-import { useGetTask } from "@/queries/task/get-task";
-import { useState } from "react";
 
-export const TaskModal = () => {
-  // const [modalAction, setModalAction] = useState("create");
-  // const modalTitle = modalAction === "create" ? "Create Task" : "Update Task";
-  // const modalDescription = modalAction === "create" ? "Create a new task here" : "Update this task";
+import useModalControl from "@/hooks/create-modal-store";
+import useCreateModal from "@/hooks/create-modal-store";
+import { FunctionComponent } from "react";
 
-  // const toggleAction = () => {
-  //   setModalAction((currentAction) =>
-  //     currentAction === "create" ? "update" : "create"
-  //   );
-  // };
+interface TaskFormDialogProps {
+  isOpen: boolean;
+  setIsOpen(value: boolean): void;
+}
+
+export const TaskModal: FunctionComponent<TaskFormDialogProps> = ({
+  isOpen,
+  setIsOpen,
+}) => {
+  //  const createModal = useCreateModal();
 
   return (
-    <DialogContent className="sm:max-w-[425px]">
-      <DialogHeader>
-        <DialogTitle className="text-2xl">Create Task</DialogTitle>
-        <DialogDescription>Create a new task here</DialogDescription>
-      </DialogHeader>
-      <TaskForm />
-    </DialogContent>
+    <Dialog
+      open={isOpen}
+      onOpenChange={() => {
+        setIsOpen(false);
+      }}
+    >
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle className="text-2xl">Create Task</DialogTitle>
+          <DialogDescription>Create a new task here</DialogDescription>
+        </DialogHeader>
+        <TaskForm
+          closeDialog={() => {
+            setIsOpen(false);
+          }}
+        />
+      </DialogContent>
+    </Dialog>
   );
 };

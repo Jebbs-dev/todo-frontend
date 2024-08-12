@@ -16,52 +16,42 @@ import { Button } from "@/components/ui/button";
 import { useGetTask } from "@/queries/task/get-task";
 import { useGetTaskId } from "@/queries/task/get-task-id";
 import { Task } from "../../../../types";
+import useEditModal from "@/hooks/edit-modal-store";
+import { useRouter } from "next/navigation";
 
 interface TaskFormSheetProps {
-  taskId: string;
+  task: Task;
   isOpen: boolean;
-  setIsOpen(value: boolean): void
-  variant?: "create" | "update"; // Add variant prop to control form behavior (create vs update)
+  setIsOpen(value: boolean): void;
 }
 
-const TaskFormSheet: FunctionComponent<TaskFormSheetProps> = ({ taskId, isOpen, setIsOpen }) => {
-  // const SheetTitle = variant === "create" ? "Create Task" : "Update Task";
-  // const SheetDescription = variant === "create" ? "Create a new task here" : "Update this task";
-
-  const { data: task, isLoading } = useGetTaskId(taskId);
+const TaskFormSheet: FunctionComponent<TaskFormSheetProps> = ({
+  isOpen,
+  setIsOpen,
+  task,
+}) => {
+  const router = useRouter();
 
   return (
-    <Sheet open={isOpen} onOpenChange={() => setIsOpen(false)}>
-      {/* <SheetTrigger asChild>
-        <Button variant="outline">Open</Button>
-      </SheetTrigger> */}
+    <Sheet
+      open={isOpen}
+      onOpenChange={() => {
+        setIsOpen(false);
+      }}
+    >
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here. Click save when you're done.
-          </SheetDescription>
+          <SheetTitle>Update Task</SheetTitle>
+          <SheetDescription>Update selected task here</SheetDescription>
         </SheetHeader>
-        <TaskForm initialData={task as Task} />
-        <SheetFooter>
-          <SheetClose asChild>
-            <Button type="submit">Save changes</Button>
-          </SheetClose>
-        </SheetFooter>
+        <TaskForm
+          initialData={task as Task}
+          closeDialog={() => {
+            setIsOpen(false);
+          }}
+        />
       </SheetContent>
     </Sheet>
-    // <SheetContent className="right-0 h-full w-[400px] p-5">
-    //   <SheetHeader className="flex flex-col items-center">
-    //     <SheetTitle>Update Task</SheetTitle>
-    //     <SheetDescription>Update this task here</SheetDescription>
-    //   </SheetHeader>
-    //   <TaskForm initialData={task as Task} />
-    //   <SheetFooter>
-    //     {/* <SheetClose>
-    //       <Button variant="outline">Close</Button>
-    //     </SheetClose> */}
-    //   </SheetFooter>
-    // </SheetContent>
   );
 };
 

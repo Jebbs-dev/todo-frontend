@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 interface ProviderProps {
   children: React.ReactNode;
@@ -6,15 +6,10 @@ interface ProviderProps {
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-
-export const QueryProvider: React.FC<ProviderProps> = ({
-  children,
-}) => {
+export const QueryProvider: React.FC<ProviderProps> = ({ children }) => {
   const queryClient = new QueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 };

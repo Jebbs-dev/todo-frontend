@@ -22,22 +22,20 @@ import {
   Trash,
   UserPlus,
 } from "lucide-react";
-// import { TaskColumn } from "./columns";
 
 import { labels } from "./data/labels";
 
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-// import Link from "next/link";
-// import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-// import { TaskModal } from "../components/task-dialog";
+
 import { Task } from "../../../../../types";
 import { Drawer, DrawerTrigger } from "@/components/ui/drawer";
 import TaskFormDrawer from "../task-sheet";
 
 import { FunctionComponent, useState } from "react";
-import Link from "next/link";
 import useEditModal from "@/hooks/edit-modal-store";
+import useLabelStore from "@/store/useTaskLabel";
+import { useDeleteTask } from "@/mutations/task/delete-task";
 
 interface CellActionProps {
   data: Task;
@@ -45,6 +43,10 @@ interface CellActionProps {
 }
 
 export const CellAction: FunctionComponent<CellActionProps> = ({ data }) => {
+  const labelStore = useLabelStore.getState();
+
+  const { mutateAsync: deleteTask, isPending } = useDeleteTask(data._id);
+
   const onCopy = (title: string) => {
     navigator.clipboard.writeText(title);
     toast.success("Task copied to the clipboard");
@@ -58,7 +60,12 @@ export const CellAction: FunctionComponent<CellActionProps> = ({ data }) => {
     e.preventDefault();
     setIsTaskOpen(true);
     // editSheet.onOpen(true);
+  };
 
+  const onDeleteTask = (e: any) => {
+    e.preventDefault();
+    deleteTask();
+    toast.success("Task deleted successfully!");
   };
 
   const router = useRouter();
@@ -103,7 +110,12 @@ export const CellAction: FunctionComponent<CellActionProps> = ({ data }) => {
             <DropdownMenuPortal>
               <DropdownMenuSubContent>
                 {labels.map((label) => (
-                  <DropdownMenuItem key={label} onSelect={() => {}}>
+                  <DropdownMenuItem
+                    key={label}
+                    onSelect={() => {
+                      labelStore.setLabel(data._id, label);
+                    }}
+                  >
                     <Mail className="mr-2 h-4 w-4" />
                     <span>{label}</span>
                   </DropdownMenuItem>
@@ -112,9 +124,7 @@ export const CellAction: FunctionComponent<CellActionProps> = ({ data }) => {
             </DropdownMenuPortal>
           </DropdownMenuSub>
 
-          <DropdownMenuItem
-          // onClick={() => setOpen(true)}
-          >
+          <DropdownMenuItem onClick={onDeleteTask}>
             {/* <Trash className="mr-2 h-4 w-4" /> */}
             Delete
           </DropdownMenuItem>

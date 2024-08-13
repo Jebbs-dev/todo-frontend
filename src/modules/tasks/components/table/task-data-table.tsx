@@ -23,13 +23,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
+
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronsLeft,
   ChevronsRight,
+  CirclePlus,
   Plus,
 } from "lucide-react";
 
@@ -48,12 +50,15 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverTrigger } from "@/components/ui/popover";
+import useCreateModal from "@/hooks/create-modal-store";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  data?: TData[];
   searchkey: string;
 }
 
@@ -62,12 +67,27 @@ export function DataTable<TData, TValue>({
   data,
   searchkey,
 }: DataTableProps<TData, TValue>) {
+
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const [openStatusCombobox, setOpenStatusCombobox] = useState(false)
+
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
-  const [sorting, setSorting] = useState<SortingState>([])
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  const onCreateTask = (e: any) => {
+    e.preventDefault();
+    setIsFormOpen(true);
+  };
+
+  const onOpenStatus = (e: any) => {
+    e.preventDefault();
+    setOpenStatusCombobox(true);
+  };
 
   const table = useReactTable({
-    data,
+    data: data || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -85,15 +105,40 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
+      <TaskModal isOpen={isFormOpen} setIsOpen={setIsFormOpen} />
+      
       <div className="flex items-center justify-between py-4">
-        <Input
-          placeholder="Search tasks..."
-          value={(table.getColumn(searchkey)?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn(searchkey)?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+        <div className="flex flex-row space-x-3">
+          <Input
+            placeholder="Search tasks..."
+            value={
+              (table.getColumn(searchkey)?.getFilterValue() as string) ?? ""
+            }
+            onChange={(event) =>
+              table.getColumn(searchkey)?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+          <div className="inline-flex space-x-2">
+            <Popover>
+              <PopoverTrigger onClick={onOpenStatus}>
+                <Button variant="outline" className="border-dotted border-2">
+                  <CirclePlus className="mr-2 h-4 w-4" />
+                  Status
+                </Button>
+              </PopoverTrigger>
+            </Popover>
+
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="border-dotted border-2">
+                  <CirclePlus className="mr-2 h-4 w-4" />
+                  Priority
+                </Button>
+              </PopoverTrigger>
+            </Popover>
+          </div>
+        </div>
         <div className="flex flex-row space-x-3">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -106,6 +151,7 @@ export function DataTable<TData, TValue>({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Toggle Columns</DropdownMenuLabel>
+              <DropdownMenuSeparator className="bg-black/10" />
               {table
                 .getAllColumns()
                 .filter((column) => column.getCanHide())
@@ -127,11 +173,13 @@ export function DataTable<TData, TValue>({
           </DropdownMenu>
 
           <Dialog>
-            <DialogTrigger className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+            <DialogTrigger
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+              onClick={onCreateTask}
+            >
               <Plus className="mr-2 h-4 w-4" />
               New Task
             </DialogTrigger>
-            <TaskModal />
           </Dialog>
         </div>
       </div>

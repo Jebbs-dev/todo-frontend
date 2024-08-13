@@ -20,7 +20,6 @@ export const useAuthenticateUser = () => {
       );
    
       const storedToken = response.data.accessToken;
-      console.log(storedToken);
       localStorage.setItem("jwtToken", JSON.stringify(storedToken));
 
       return response.data;

@@ -1,12 +1,10 @@
 import { TaskProps } from "@/modules/tasks/components/task-form";
-import { useGetTask } from "@/queries/task/get-task";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import { Task } from "../../../types";
 
 export const useUpdateTask = (taskId: string) => {
-  const router = useRouter();
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (values: TaskProps): Promise<Task> => {
@@ -33,9 +31,8 @@ export const useUpdateTask = (taskId: string) => {
       if (error) {
         console.error("Error updating task:", error.message);
       }
-      if (data) {
-        router.push("/tasks");
-        router.refresh();
+      else {
+        queryClient.invalidateQueries({queryKey: ['tasks']})
       }
     },
   });

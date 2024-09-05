@@ -1,7 +1,7 @@
 "use client";
 
 // import Layout from "./layout";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 import { useGetUser } from "@/queries/user/get-user";
 import { useGetTask } from "@/queries/task/get-task";
@@ -21,15 +21,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-import { useLogoutUser } from "@/mutations/auth/logout-user";
 import { HomePageSkeleton } from "@/modules/tasks/components/task-homepage-skeleton";
 import toast from "react-hot-toast";
+import { revalidatePath } from "next/cache";
 
 const Home = () => {
+  const router = useRouter();
+
   const { data: authenticatedUser, isPending: isAuthPending } = useGetUser();
   const { data: tasks, isFetching: isTasksFetching } = useGetTask();
-  const { mutateAsync: logoutUser } = useLogoutUser();
 
   if (isAuthPending) {
     return <HomePageSkeleton />;
@@ -38,13 +38,16 @@ const Home = () => {
   if (!authenticatedUser) {
     redirect("/auth");
   }
-  const handleLogout = async () => {
-    try {
-      await logoutUser();
+
+  const handleLogout = () => {
+    if (authenticatedUser) {
+      localStorage.removeItem("jwtToken");
       toast.success("Logged out successfully!");
-    } catch (error) {
-      toast.error("Something went wrong!");
-    }
+      
+      router.push("/auth");
+      router.refresh();
+
+    } else toast.error("Something went wrong!");
   };
 
   return (
@@ -52,8 +55,8 @@ const Home = () => {
       {authenticatedUser && (
         <div className="h-screen p-10">
           <div className="mx-3 px-3 md:mx-0 md:px-10 py-4 border rounded-md bg-white">
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex items-center md:justify-between">
+              <div className="">
                 <h2 className="text-2xl font-bold tracking-tight text-black">
                   Welcome back {authenticatedUser?.name}!{/* Welcome back! */}
                 </h2>

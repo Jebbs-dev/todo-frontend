@@ -1,11 +1,10 @@
-import { UserProps } from "@/modules/authentication/components/forms/auth-form";
 import { TaskProps } from "@/modules/tasks/components/task-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
 export const useCreateTask = () => {
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (values: TaskProps) => {
@@ -28,9 +27,11 @@ export const useCreateTask = () => {
       );
       return response.data;
     },
-    onSettled: (data, error) => {
+    onSettled: (error) => {
       if (error) {
         console.error("Error creating task:", error.message);
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["tasks"] });
       }
     },
   });

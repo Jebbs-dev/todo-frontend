@@ -67,10 +67,9 @@ export function DataTable<TData, TValue>({
   data,
   searchkey,
 }: DataTableProps<TData, TValue>) {
-
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const [openStatusCombobox, setOpenStatusCombobox] = useState(false)
+  const [openStatusCombobox, setOpenStatusCombobox] = useState(false);
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -106,7 +105,7 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <TaskModal isOpen={isFormOpen} setIsOpen={setIsFormOpen} />
-      
+
       <div className="flex items-center justify-between py-4 flex-wrap gap-5">
         <div className="flex flex-col gap-5 md:gap-0 md:flex-row md:space-x-3">
           <Input
@@ -234,12 +233,30 @@ export function DataTable<TData, TValue>({
         </Table>
       </div>
 
-      <div className="mt-3 flex items-center justify-between px-2">
-        <div className="flex-1 text-sm text-muted-foreground">
+      <div className="mt-3 flex items-center justify-center md:justify-between px-2">
+        <div className="md:hidden flex items-center justify-end space-x-2 py-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
+        <div className="hidden md:flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
-        <div className="flex items-center space-x-6 lg:space-x-8">
+        <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
           <div className="flex items-center space-x-2">
             <p className="text-sm font-medium">Rows per page</p>
             <Select
@@ -262,10 +279,12 @@ export function DataTable<TData, TValue>({
               </SelectContent>
             </Select>
           </div>
+
           <div className="flex w-[100px] items-center justify-center text-sm font-medium">
             Page {table.getState().pagination.pageIndex + 1} of{" "}
             {table.getPageCount()}
           </div>
+
           <div className="flex items-center space-x-2">
             <Button
               variant="outline"

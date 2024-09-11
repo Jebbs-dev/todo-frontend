@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { useGetTask } from "@/queries/task/get-task";
 import { useGetTaskId } from "@/queries/task/get-task-id";
 import { Task } from "../../../../types";
-import useEditModal from "@/hooks/edit-modal-store";
 import { useRouter } from "next/navigation";
 
 interface TaskFormSheetProps {

@@ -107,8 +107,8 @@ export function DataTable<TData, TValue>({
     <div>
       <TaskModal isOpen={isFormOpen} setIsOpen={setIsFormOpen} />
       
-      <div className="flex items-center justify-between py-4">
-        <div className="flex flex-row space-x-3">
+      <div className="flex items-center justify-between py-4 flex-wrap gap-5">
+        <div className="flex flex-col gap-5 md:gap-0 md:flex-row md:space-x-3">
           <Input
             placeholder="Search tasks..."
             value={
@@ -117,7 +117,7 @@ export function DataTable<TData, TValue>({
             onChange={(event) =>
               table.getColumn(searchkey)?.setFilterValue(event.target.value)
             }
-            className="max-w-sm"
+            className="md:max-w-sm flex-shrink-0"
           />
           <div className="inline-flex space-x-2">
             <Popover>

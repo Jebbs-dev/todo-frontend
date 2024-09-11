@@ -33,7 +33,6 @@ import { Drawer, DrawerTrigger } from "@/components/ui/drawer";
 import TaskFormDrawer from "../task-sheet";
 
 import { FunctionComponent, useState } from "react";
-import useEditModal from "@/hooks/edit-modal-store";
 import useLabelStore from "@/store/useTaskLabel";
 import { useDeleteTask } from "@/mutations/task/delete-task";
 
@@ -51,8 +50,6 @@ export const CellAction: FunctionComponent<CellActionProps> = ({ data }) => {
     navigator.clipboard.writeText(title);
     toast.success("Task copied to the clipboard");
   };
-
-  const editSheet = useEditModal();
 
   const [isTaskOpen, setIsTaskOpen] = useState(false);
 

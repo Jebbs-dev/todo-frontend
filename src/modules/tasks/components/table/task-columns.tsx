@@ -15,8 +15,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useState } from "react";
-import { TitleLabels } from "./title-labels";
+
+import { TaskLabel } from "./task-labels";
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -83,7 +83,7 @@ export const columns: ColumnDef<Task>[] = [
         </DropdownMenu>
       );
     },
-    // cell: ({ row }) => <TitleLabels data={row.original}  />,
+    cell: ({ row }) => <TaskLabel data={row.original}  />,
   },
   {
     accessorKey: "status",

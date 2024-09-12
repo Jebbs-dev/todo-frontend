@@ -106,8 +106,8 @@ export function DataTable<TData, TValue>({
     <div>
       <TaskModal isOpen={isFormOpen} setIsOpen={setIsFormOpen} />
 
-      <div className="flex items-center justify-between py-4 flex-wrap gap-5">
-        <div className="flex flex-col gap-5 md:gap-0 md:flex-row md:space-x-3">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between py-4 gap-5">
+        <div className="flex flex-col justify-between lg:justify-normal gap-5 md:gap-0 md:flex-row md:space-x-3">
           <Input
             placeholder="Search tasks..."
             value={
@@ -116,7 +116,7 @@ export function DataTable<TData, TValue>({
             onChange={(event) =>
               table.getColumn(searchkey)?.setFilterValue(event.target.value)
             }
-            className="md:max-w-sm flex-shrink-0"
+            className="md:max-w-sm lg:flex-shrink-0"
           />
           <div className="inline-flex space-x-2">
             <Popover>
@@ -138,10 +138,10 @@ export function DataTable<TData, TValue>({
             </Popover>
           </div>
         </div>
-        <div className="flex flex-row space-x-3">
+        <div className="flex flex-row flex-wrap md:flex-nowrap space-x-3">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto px-2">
+              <Button variant="outline" className="px-4 py-2">
                 <div className="flex flex-row items-center">
                   <PiSlidersHorizontal className="mr-2 h-5 w-5" />
                   View

@@ -1,7 +1,7 @@
 import { TaskProps } from "@/modules/tasks/components/task-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { Task } from "../../../types";
+import { Task } from "../../../../types";
 
 export const useUpdateTask = (taskId: string) => {
   const queryClient = useQueryClient()

@@ -24,6 +24,7 @@ import {
 import { HomePageSkeleton } from "@/modules/tasks/components/task-homepage-skeleton";
 import toast from "react-hot-toast";
 import { revalidatePath } from "next/cache";
+import Link from "next/link";
 
 const Home = () => {
   const router = useRouter();
@@ -43,18 +44,17 @@ const Home = () => {
     if (authenticatedUser) {
       localStorage.removeItem("jwtToken");
       toast.success("Logged out successfully!");
-      
+
       router.push("/auth");
       router.refresh();
-
     } else toast.error("Something went wrong!");
   };
 
   return (
     <>
       {authenticatedUser && (
-        <div className="h-screen p-10">
-          <div className="mx-3 px-3 md:mx-0 md:px-10 py-4 border rounded-md bg-white">
+        <div className="h-screen p-10 ">
+          <div className="mx-3 px-3 md:mx-0 md:px-10 py-4 border rounded-md">
             <div className="flex flex-row items-center justify-between">
               <div className="w-3/4 md:w-full">
                 <h2 className="text-2xl font-bold tracking-tight text-black">
@@ -85,12 +85,10 @@ const Home = () => {
                   <DropdownMenuSeparator className="bg-black/10" />
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
-                      <User className="mr-2 h-4 w-4" />
-                      <span>Profile</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
                       <Settings className="mr-2 h-4 w-4" />
-                      <span>User Settings</span>
+                      <Link href="settings">
+                        User Settings
+                      </Link>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator className="bg-black/10" />

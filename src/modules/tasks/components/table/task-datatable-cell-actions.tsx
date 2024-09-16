@@ -34,7 +34,7 @@ import TaskFormDrawer from "../task-sheet";
 
 import { FunctionComponent, useState } from "react";
 import useLabelStore from "@/store/useTaskLabel";
-import { useDeleteTask } from "@/mutations/task/delete-task";
+import { useDeleteTask } from "@/modules/tasks/mutations/delete-task";
 
 interface CellActionProps {
   data: Task;

@@ -1,4 +1,4 @@
-import { UserProps } from "@/modules/authentication/components/forms/auth-form";
+import { UserProps } from "@/lib/validation";
 import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -9,7 +9,6 @@ interface TaskFilters {
 
 export const useAuthenticateUser = () => {
   const router = useRouter();
-  const queryClient = new QueryClient();
 
   return useMutation({
     mutationFn: async (values: UserProps) => {
@@ -29,7 +28,7 @@ export const useAuthenticateUser = () => {
         console.error("Error authenticating user:", error.message);
       }
       if (data) {
-        router.push("/tasks");
+        router.push("/");
       }
     },
   });

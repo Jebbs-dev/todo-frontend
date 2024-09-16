@@ -19,9 +19,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCreateTask } from "@/mutations/task/add-task";
+import { useCreateTask } from "@/modules/tasks/mutations/add-task";
 import { Task } from "../../../../types";
-import { useUpdateTask } from "@/mutations/task/update-task";
+import { useUpdateTask } from "@/modules/tasks/mutations/update-task";
 import toast from "react-hot-toast";
 import { FunctionComponent } from "react";
 
@@ -46,8 +46,10 @@ const formSchema = z.object({
 
 export type TaskProps = z.infer<typeof formSchema>;
 
-export const TaskForm: FunctionComponent<TaskFormProps> = ({ initialData, closeDialog }) => {
-
+export const TaskForm: FunctionComponent<TaskFormProps> = ({
+  initialData,
+  closeDialog,
+}) => {
   const router = useRouter();
 
   const taskId = initialData?._id;
@@ -71,13 +73,16 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({ initialData, closeD
       if (initialData) {
         await updateTask(values);
         closeDialog();
-
       } else {
         await createTask(values);
         closeDialog();
       }
+      
       toast.success(toastMessage);
+      
+      // router.push("/tasks");
       router.refresh();
+
     } catch (error) {
       toast.error("Something went wrong!");
     }

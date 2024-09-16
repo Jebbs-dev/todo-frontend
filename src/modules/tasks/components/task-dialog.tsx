@@ -31,7 +31,7 @@ export const TaskModal: FunctionComponent<TaskFormDialogProps> = ({
         setIsOpen(false);
       }}
     >
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-w-[90vw] sm:max-w-[425px] rounded-lg">
         <DialogHeader>
           <DialogTitle className="text-2xl">Create Task</DialogTitle>
           <DialogDescription>Create a new task here</DialogDescription>

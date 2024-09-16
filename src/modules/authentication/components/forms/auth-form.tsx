@@ -15,36 +15,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { FaDotCircle } from "react-icons/fa";
-
-import { useCreateUser } from "@/mutations/user/add-user";
-import { useAuthenticateUser } from "@/mutations/auth/authenticate-user";
+import { useCreateUser } from "@/modules/user/mutations/add-user";
+import { useAuthenticateUser } from "@/modules/authentication/mutations/authenticate-user";
 import toast from "react-hot-toast";
 import { FunctionComponent } from "react";
+import { UserFormValidation, UserProps } from "@/lib/validation";
 
 interface AuthFormProps {
   variant: string;
 }
-
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(3, {
-      message: "Name must be at least 3 characters long.",
-    })
-    .optional(),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  password: z
-    .string()
-    .min(4, {
-      message: "Password must be at least 4 characters long.",
-    })
-    .max(10, {
-      message: "Password must be no more than 10 characters long.",
-    }),
-});
 
 const signupDefaultValues = {
   name: "",
@@ -57,8 +36,6 @@ const loginDefaultValues = {
   password: "",
 };
 
-export type UserProps = z.infer<typeof formSchema>;
-
 export const AuthForm: FunctionComponent<AuthFormProps> = ({ variant }) => {
   const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: authenticateUser } = useAuthenticateUser();
@@ -66,7 +43,7 @@ export const AuthForm: FunctionComponent<AuthFormProps> = ({ variant }) => {
   // const toastMessage = variant === "login" ? "Logged in successfully!" : "Account created successfully!"
 
   const form = useForm<UserProps>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(UserFormValidation),
     defaultValues:
       variant === "login" ? loginDefaultValues : signupDefaultValues,
   });

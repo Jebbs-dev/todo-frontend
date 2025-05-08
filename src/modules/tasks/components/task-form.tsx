@@ -42,6 +42,7 @@ const formSchema = z.object({
   priority: z.enum(["Low", "Medium", "High"], {
     required_error: "Please select a priority level for your task",
   }),
+  label: z.string().optional(),
 });
 
 export type TaskProps = z.infer<typeof formSchema>;
@@ -77,12 +78,11 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({
         await createTask(values);
         closeDialog();
       }
-      
+
       toast.success(toastMessage);
-      
+
       // router.push("/tasks");
       router.refresh();
-
     } catch (error) {
       toast.error("Something went wrong!");
     }

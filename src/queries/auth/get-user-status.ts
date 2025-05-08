@@ -9,7 +9,7 @@ export const useGetUserAuthStatus = () => {
       try {
         const response = await axios.get(
           "http://localhost:8080/api/auth/status",
-          { withCredentials: true }
+          // { withCredentials: true }
         );
 
         if (!response) {

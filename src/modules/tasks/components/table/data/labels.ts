@@ -1,9 +1,11 @@
 export const labels = [
-  "Feature",
-  "Bug",
-  "Enhancement",
-  "Documentation",
-  "Design",
-  "Question",
-  "Maintenance",
+  "personal",
+  "work",
+  "business",
+  "interest",
+  "family",
+  "health",
+  "education",
+  "spiritual",
+  "miscellaneous",
 ]

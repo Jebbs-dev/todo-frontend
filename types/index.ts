@@ -3,6 +3,16 @@ export type Task = {
   title: string;
   status: "Backlog" | "Todo" | "In Progress" | "Done" | "Cancelled";
   priority: "Low" | "Medium" | "High";
+  label?:
+    | "personal"
+    | "work"
+    | "business"
+    | "interest"
+    | "family"
+    | "health"
+    | "education"
+    | "spiritual"
+    | "miscellaneous";
   userId: string;
   createdAt: Date;
   updatedAt: Date;

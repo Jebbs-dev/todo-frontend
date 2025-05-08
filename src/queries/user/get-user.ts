@@ -1,26 +1,32 @@
-import { useQuery } from "@tanstack/react-query";
+import { skipToken, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { User } from "../../../types";
 
 export const useGetUser = () => {
+  const storedToken = localStorage.getItem("jwtToken");
+
+  if (!storedToken) {
+    throw new Error("No token found, user is not authenticated");
+  }
+
+  const parsedToken = JSON.parse(storedToken);
+
   return useQuery({
     queryKey: ["users"],
-    queryFn: async (): Promise<User> => {
-      const storedToken = localStorage.getItem("jwtToken");
+    queryFn: parsedToken
+      ? async (): Promise<User> => {
 
-      if (!storedToken) {
-        throw new Error("No token found, user is not authenticated");
-      }
+          const response = await axios.get<User>(
+            "http://localhost:8080/api/users",
+            {
+              headers: {
+                Authorization: `Bearer ${parsedToken}`,
+              },
+            }
+          );
 
-      const parsedToken = JSON.parse(storedToken);
-
-      const response = await axios.get<User>("http://localhost:8080/api/users", {
-        headers: {
-          Authorization: `Bearer ${parsedToken}`,
-        },
-      });
-
-      return response.data;
-    },
+          return response.data;
+        }
+      : skipToken,
   });
 };

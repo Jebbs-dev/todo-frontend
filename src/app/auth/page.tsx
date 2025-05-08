@@ -6,9 +6,8 @@ import Image from "next/image";
 
 import { Separator } from "@/components/ui/separator";
 import { FcGoogle } from "react-icons/fc";
-import { FaDiscord, FaGithub } from "react-icons/fa";
+import { FaDiscord, FaGithub, FaSpinner } from "react-icons/fa";
 import { AuthForm } from "@/modules/authentication/components/forms/auth-form";
-
 
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -21,13 +20,16 @@ const AuthPage = () => {
   const { data: authenticatedUser, isLoading } = useGetUser();
 
   if (isLoading) {
-    return <p>Loading...</p>; // You can customize this loading state as needed
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <FaSpinner className="animate-spin text-2xl" />
+      </div>
+    ); // You can customize this loading state as needed
   }
 
   if (authenticatedUser) {
-    router.replace("/tasks");
+    router.replace("/");
   }
- 
 
   const toggleVariant = () => {
     setVariant((currentVariant) =>

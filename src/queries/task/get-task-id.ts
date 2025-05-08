@@ -3,6 +3,8 @@ import axios from "axios";
 import { Task } from "../../../types";
 import { useGetTask } from "./get-task";
 
+
+
 export const useGetTaskId = (taskId: string) => {
   return useQuery({
     queryKey: ["tasks", taskId],
@@ -15,6 +17,7 @@ export const useGetTaskId = (taskId: string) => {
         throw new Error("Failed to fetch tasks");
       }
 
+      console.log(response.data)
       return response.data;
     },
   });

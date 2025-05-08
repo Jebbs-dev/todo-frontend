@@ -12,9 +12,7 @@ import {
 import { FunctionComponent } from "react";
 
 import { TaskForm } from "./task-form";
-import { Button } from "@/components/ui/button";
-import { useGetTask } from "@/queries/task/get-task";
-import { useGetTaskId } from "@/queries/task/get-task-id";
+
 import { Task } from "../../../../types";
 import { useRouter } from "next/navigation";
 

@@ -12,16 +12,9 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Copy,
-  Edit,
-  Mail,
-  MessageSquare,
-  MoreHorizontal,
-  PlusCircle,
-  Trash,
-  UserPlus,
-} from "lucide-react";
+import { Drawer, DrawerTrigger } from "@/components/ui/drawer";
+
+import { MoreHorizontal } from "lucide-react";
 
 import { labels } from "./data/labels";
 
@@ -29,12 +22,12 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 import { Task } from "../../../../../types";
-import { Drawer, DrawerTrigger } from "@/components/ui/drawer";
 import TaskFormDrawer from "../task-sheet";
 
 import { FunctionComponent, useState } from "react";
 import useLabelStore from "@/store/useTaskLabel";
 import { useDeleteTask } from "@/modules/tasks/mutations/delete-task";
+import { useUpdateTask } from "../../mutations/update-task";
 
 interface CellActionProps {
   data: Task;
@@ -44,6 +37,7 @@ interface CellActionProps {
 export const CellAction: FunctionComponent<CellActionProps> = ({ data }) => {
   const labelStore = useLabelStore.getState();
 
+  const { mutateAsync: updateTask } = useUpdateTask(data._id);
   const { mutateAsync: deleteTask, isPending } = useDeleteTask(data._id);
 
   const onCopy = (title: string) => {
@@ -110,10 +104,16 @@ export const CellAction: FunctionComponent<CellActionProps> = ({ data }) => {
                   <DropdownMenuItem
                     key={label}
                     onSelect={() => {
-                      labelStore.setLabel(data._id, label);
+                      // labelStore.setLabel(data._id, label);
+                      const taskData = {
+                        title: data.title,
+                        status: data.status,
+                        priority: data.priority,
+                      };
+
+                      updateTask({...taskData, label });
                     }}
                   >
-                    <Mail className="mr-2 h-4 w-4" />
                     <span>{label}</span>
                   </DropdownMenuItem>
                 ))}

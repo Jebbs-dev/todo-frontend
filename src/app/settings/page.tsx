@@ -7,6 +7,7 @@ import { useGetUser } from "@/queries/user/get-user";
 import { User } from "../../../types";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Home } from "lucide-react";
 
 const Settings = () => {
   const { data: userData } = useGetUser();
@@ -14,16 +15,21 @@ const Settings = () => {
   return (
     <div className="h-screen p-10">
       <div className="mx-3 px-3 md:mx-0 md:px-10 py-4">
-        <section className="flex flex-row items-center justify-between">
+        <section className="flex flex-row items-start md:items-center justify-between gap-3 md:gap-0">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight text-black">
+            <h2 className="text-xl md:text-3xl font-bold tracking-tight text-black">
               Settings
             </h2>
             <p>Manage your account settings and set e-mail preferences.</p>
           </div>
 
-          <Button asChild className="hover:bg-gray-600 mt-2">
+          <Button asChild className="hover:bg-gray-600 mt-2 hidden md:block">
             <Link href="/">Back to Home</Link>
+          </Button>
+          <Button asChild className="hover:bg-gray-600 mt-2 md:hidden">
+            <Link href="/">
+              <Home />
+            </Link>
           </Button>
         </section>
         <Separator className="my-5" />

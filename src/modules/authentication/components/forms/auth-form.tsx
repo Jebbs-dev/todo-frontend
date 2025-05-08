@@ -20,6 +20,7 @@ import { useAuthenticateUser } from "@/modules/authentication/mutations/authenti
 import toast from "react-hot-toast";
 import { FunctionComponent } from "react";
 import { UserFormValidation, UserProps } from "@/lib/validation";
+import { FaSpinner } from "react-icons/fa";
 
 interface AuthFormProps {
   variant: string;
@@ -37,8 +38,10 @@ const loginDefaultValues = {
 };
 
 export const AuthForm: FunctionComponent<AuthFormProps> = ({ variant }) => {
-  const { mutateAsync: createUser } = useCreateUser();
-  const { mutateAsync: authenticateUser } = useAuthenticateUser();
+  const { mutateAsync: createUser, isPending: isSignupPending } =
+    useCreateUser();
+  const { mutateAsync: authenticateUser, isPending: isLoginPending } =
+    useAuthenticateUser();
 
   // const toastMessage = variant === "login" ? "Logged in successfully!" : "Account created successfully!"
 
@@ -144,7 +147,14 @@ export const AuthForm: FunctionComponent<AuthFormProps> = ({ variant }) => {
             type="submit"
             className="bg-white w-full text-black hover:bg-gray-400 mt-2"
           >
-            Submit
+            {isSignupPending || isLoginPending ? (
+              <p className="flex flex-row items-center">
+                <span>Submitting </span>
+                <FaSpinner className="ml-3 animate-spin text-green-950" />
+              </p>
+            ) : (
+              <p>Submit</p>
+            )}
           </Button>
         </form>
       </Form>

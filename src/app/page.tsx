@@ -33,7 +33,7 @@ const Home = () => {
   const { data: authenticatedUser, isPending: isAuthPending } = useGetUser();
   const { data: tasks, isFetching: isTasksFetching } = useGetTask();
 
-  if (isAuthPending) {
+  if (isAuthPending || isTasksFetching) {
     return <HomePageSkeleton />;
   }
 

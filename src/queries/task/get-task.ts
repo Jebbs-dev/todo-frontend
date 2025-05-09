@@ -4,33 +4,31 @@ import { Task } from "../../../types";
 import { getLocalStorage } from "@/utils/storage";
 
 export const useGetTask = () => {
-  const storedToken = getLocalStorage("jwtToken");
-
-  if (!storedToken) {
-    throw new Error("No token found, user is not authenticated");
-  }
-
-  const parsedToken = JSON.parse(storedToken);
-
   return useQuery({
     queryKey: ["tasks"],
-    queryFn: parsedToken
-      ? async (): Promise<Task[]> => {
-          const response = await axios.get<Task[]>(
-            "https://todo-backend-new-production.up.railway.app/api/tasks",
-            {
-              headers: {
-                Authorization: `Bearer ${parsedToken}`,
-              },
-            }
-          );
+    queryFn: async (): Promise<Task[]> => {
+      const storedToken = getLocalStorage("jwtToken");
 
-          if (!response) {
-            throw new Error("Failed to fetch tasks");
-          }
+      if (!storedToken) {
+        throw new Error("No token found, user is not authenticated");
+      }
 
-          return response.data;
+      const parsedToken = JSON.parse(storedToken);
+
+      const response = await axios.get<Task[]>(
+        "https://todo-backend-new-production.up.railway.app/api/tasks",
+        {
+          headers: {
+            Authorization: `Bearer ${parsedToken}`,
+          },
         }
-      : skipToken,
+      );
+
+      if (!response) {
+        throw new Error("Failed to fetch tasks");
+      }
+
+      return response.data;
+    },
   });
 };

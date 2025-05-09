@@ -26,6 +26,8 @@ import toast from "react-hot-toast";
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { removeLocalStorage } from "@/utils/storage";
+import { FaSpinner } from "react-icons/fa";
+import { TaskDataTableSkeleton } from "@/modules/tasks/components/table/task-data-table-skeleton";
 
 const Home = () => {
   const router = useRouter();
@@ -33,8 +35,21 @@ const Home = () => {
   const { data: authenticatedUser, isPending: isAuthPending } = useGetUser();
   const { data: tasks, isFetching: isTasksFetching } = useGetTask();
 
-  if (isAuthPending || isTasksFetching) {
-    return <HomePageSkeleton />;
+  if (isAuthPending) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <h3 className="text-xl md:text-3xl">Loading</h3>
+        <FaSpinner className="ml-3 text-xl md:text-3xl animate-spin" />
+      </div>
+    );
+  }
+
+  if (isTasksFetching) {
+    return (
+      <div className="mx-3 px-3 md:mx-0 md:px-10 py-4 border rounded-md">
+        <TaskDataTableSkeleton />
+      </div>
+    );
   }
 
   if (!authenticatedUser) {
@@ -87,9 +102,7 @@ const Home = () => {
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
                       <Settings className="mr-2 h-4 w-4" />
-                      <Link href="settings">
-                        User Settings
-                      </Link>
+                      <Link href="settings">User Settings</Link>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator className="bg-black/10" />

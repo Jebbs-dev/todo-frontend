@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { getLocalStorage, removeLocalStorage } from "@/utils/storage";
 
 export const useLogoutUser = () => {
 
@@ -9,7 +10,7 @@ export const useLogoutUser = () => {
   return useMutation({
     mutationFn: async () => {
 
-      const storedToken = localStorage.getItem("jwtToken");
+      const storedToken = getLocalStorage("jwtToken");
 
       if (!storedToken) {
         throw new Error("No token found, user is not authenticated");
@@ -18,7 +19,7 @@ export const useLogoutUser = () => {
       const parsedToken = JSON.parse(storedToken);
 
       const response = await axios.post(
-        "http://localhost:8080/api/auth/logout",
+        "https://todo-backend-new-production.up.railway.app/api/auth/logout",
         {},
         {
           headers: {
@@ -27,7 +28,7 @@ export const useLogoutUser = () => {
         }
       );
       
-      localStorage.removeItem("jwtToken");
+      removeLocalStorage("jwtToken");
 
       return response.data;
     },

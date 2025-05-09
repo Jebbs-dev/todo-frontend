@@ -8,7 +8,7 @@ export const useGetUserAuthStatus = () => {
     queryFn: async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8080/api/auth/status",
+          "https://todo-backend-new-production.up.railway.app/api/auth/status",
           // { withCredentials: true }
         );
 

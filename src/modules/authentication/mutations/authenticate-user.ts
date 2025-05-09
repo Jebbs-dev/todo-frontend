@@ -1,5 +1,10 @@
 import { UserProps } from "@/lib/validation";
-import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
+import { setLocalStorage } from "@/utils/storage";
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -13,13 +18,13 @@ export const useAuthenticateUser = () => {
   return useMutation({
     mutationFn: async (values: UserProps) => {
       const response = await axios.post(
-        "http://localhost:8080/api/auth/login",
+        "https://todo-backend-new-production.up.railway.app/api/auth/login",
         values
         // { withCredentials: true }
       );
-   
+
       const storedToken = response.data.accessToken;
-      localStorage.setItem("jwtToken", JSON.stringify(storedToken));
+      setLocalStorage("jwtToken", storedToken)
 
       return response.data;
     },

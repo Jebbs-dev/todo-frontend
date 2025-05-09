@@ -1,6 +1,6 @@
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { getLocalStorage } from "@/utils/storage";
 
 
 export const useDeleteTask = (taskId: string) => {
@@ -8,7 +8,7 @@ export const useDeleteTask = (taskId: string) => {
 
   return useMutation({
     mutationFn: async () => {
-      const storedToken = localStorage.getItem("jwtToken");
+      const storedToken = getLocalStorage("jwtToken");
 
       if (!storedToken) {
         throw new Error("No token found, user is not authenticated");
@@ -17,7 +17,7 @@ export const useDeleteTask = (taskId: string) => {
       const parsedToken = JSON.parse(storedToken);
 
       const response = await axios.delete(
-        `http://localhost:8080/api/tasks/${taskId}`,
+        `https://todo-backend-new-production.up.railway.app/api/tasks/${taskId}`,
         {
           headers: {
             Authorization: `Bearer ${parsedToken}`,

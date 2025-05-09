@@ -1,9 +1,10 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { User } from "../../../types";
+import { getLocalStorage } from "@/utils/storage";
 
 export const useGetUser = () => {
-  const storedToken = localStorage.getItem("jwtToken");
+  const storedToken = getLocalStorage("jwtToken");
 
   if (!storedToken) {
     throw new Error("No token found, user is not authenticated");
@@ -17,7 +18,7 @@ export const useGetUser = () => {
       ? async (): Promise<User> => {
 
           const response = await axios.get<User>(
-            "http://localhost:8080/api/users",
+            "https://todo-backend-new-production.up.railway.app/api/users",
             {
               headers: {
                 Authorization: `Bearer ${parsedToken}`,

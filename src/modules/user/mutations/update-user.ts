@@ -2,13 +2,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { User } from "../../../../types";
 import { UserSettingsProps } from "@/lib/validation";
+import { getLocalStorage } from "@/utils/storage";
 
 export const useUpdateUser = (userId: string) => {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (values: UserSettingsProps): Promise<User> => {
-      const storedToken = localStorage.getItem("jwtToken");
+      const storedToken = getLocalStorage("jwtToken");
 
       if (!storedToken) {
         throw new Error("No token found, user is not authenticated");
@@ -17,7 +18,7 @@ export const useUpdateUser = (userId: string) => {
       const parsedToken = JSON.parse(storedToken);
 
       const response = await axios.patch<User>(
-        `http://localhost:8080/api/users/${userId}`,
+        `https://todo-backend-new-production.up.railway.app/api/users/${userId}`,
         values,
         {
           headers: {

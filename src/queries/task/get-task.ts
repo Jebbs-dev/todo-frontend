@@ -1,9 +1,10 @@
 import { skipToken, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Task } from "../../../types";
+import { getLocalStorage } from "@/utils/storage";
 
 export const useGetTask = () => {
-  const storedToken = localStorage.getItem("jwtToken");
+  const storedToken = getLocalStorage("jwtToken");
 
   if (!storedToken) {
     throw new Error("No token found, user is not authenticated");
@@ -16,7 +17,7 @@ export const useGetTask = () => {
     queryFn: parsedToken
       ? async (): Promise<Task[]> => {
           const response = await axios.get<Task[]>(
-            "http://localhost:8080/api/tasks",
+            "https://todo-backend-new-production.up.railway.app/api/tasks",
             {
               headers: {
                 Authorization: `Bearer ${parsedToken}`,

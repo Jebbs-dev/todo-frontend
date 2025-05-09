@@ -25,6 +25,7 @@ import { HomePageSkeleton } from "@/modules/tasks/components/task-homepage-skele
 import toast from "react-hot-toast";
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
+import { removeLocalStorage } from "@/utils/storage";
 
 const Home = () => {
   const router = useRouter();
@@ -42,7 +43,7 @@ const Home = () => {
 
   const handleLogout = () => {
     if (authenticatedUser) {
-      localStorage.removeItem("jwtToken");
+      removeLocalStorage("jwtToken");
       toast.success("Logged out successfully!");
 
       router.push("/auth");

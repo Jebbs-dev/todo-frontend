@@ -10,7 +10,7 @@ export const useGetTaskId = (taskId: string) => {
     queryKey: ["tasks", taskId],
     queryFn: async (): Promise<Task> => {
       const response = await axios.get<Task>(
-        `http://localhost:8080/api/tasks/${taskId}`
+        `https://todo-backend-new-production.up.railway.app/api/tasks/${taskId}`
       );
 
       if (!response) {

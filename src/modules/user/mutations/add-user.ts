@@ -9,7 +9,7 @@ export const useCreateUser = () => {
   return useMutation({
     mutationFn: async (values: UserProps) => {
       const response = await axios.post(
-        "http://localhost:8080/api/users/register",
+        "https://todo-backend-new-production.up.railway.app/api/users/register",
         values
       );
       console.log(response.data);

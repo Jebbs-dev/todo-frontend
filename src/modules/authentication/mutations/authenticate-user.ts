@@ -24,7 +24,7 @@ export const useAuthenticateUser = () => {
       );
 
       const storedToken = response.data.accessToken;
-      setLocalStorage("jwtToken", storedToken)
+      setLocalStorage("jwtToken", JSON.stringify(storedToken))
 
       return response.data;
     },
